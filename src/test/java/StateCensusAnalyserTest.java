@@ -25,7 +25,7 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenStateCensusCSVFile_IfIncorrect_ReturnCustomException() throws IOException, NullPointerException {
         try {
-            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILErec);
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILE);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.type);
             e.printStackTrace();
