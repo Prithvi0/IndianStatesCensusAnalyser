@@ -1,3 +1,4 @@
+import Exception.StateCensusAnalyserException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -6,12 +7,11 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
-
 public class StateCensusAnalyser {
 
     int totalEntries;   // INITIALISING A VARIABLE TO STORE ALL CSV ENTRIES COUNT
 
-    public int CensusCSVData(String csvPath) throws IOException {
+    public int CensusCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
         ) {
             // USE OF POJO FILE TO ITERATE AND PRINT ENTRIES OF CSV FILE
@@ -30,7 +30,10 @@ public class StateCensusAnalyser {
                 System.out.println("================================================");
                 totalEntries++;
             }
+        } catch (IOException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getMessage());
         }
+        System.out.println(totalEntries);
         return totalEntries;
     }
 }
