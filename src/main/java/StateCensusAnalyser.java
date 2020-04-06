@@ -7,6 +7,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
+
 public class StateCensusAnalyser {
 
     int totalEntries;   // INITIALISING A VARIABLE TO STORE ALL CSV ENTRIES COUNT
