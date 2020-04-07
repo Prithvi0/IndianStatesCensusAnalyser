@@ -32,7 +32,7 @@ public class StateCensusAnalyser {
                 totalEntries++;
             }
         } catch (IOException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getMessage());
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         }
         System.out.println(totalEntries);
         return totalEntries;
