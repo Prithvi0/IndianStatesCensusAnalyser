@@ -43,6 +43,7 @@ public class StateCensusAnalyserTest {
             e.printStackTrace();
         }
     }
+
     // T.C 1.4: TEST CASE TO RETURN A CUSTOM EXCEPTION IF THE FILE DELIMITER IS INCORRECT
     @Test
     public void givenStateCensusFile_WhenIncorrectDelimiter_ReturnCustomException() throws IOException, NullPointerException {
