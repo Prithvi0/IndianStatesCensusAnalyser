@@ -32,10 +32,7 @@ public class StateCensusAnalyserTest {
             e.printStackTrace();
         }
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> UC1-LoadInfoFromCSVFile
     // T.C 1.3: TEST CASE TO RETURN A CUSTOM EXCEPTION IF FILE TYPE IS INCORRECT
     @Test
     public void givenStateCensusFile_IfIncorrectFileType_ReturnCustomException() throws IOException, NullPointerException {
