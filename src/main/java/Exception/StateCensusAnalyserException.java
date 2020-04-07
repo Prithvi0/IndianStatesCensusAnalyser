@@ -2,7 +2,7 @@ package Exception;
 // CLASS FOR CUSTOM EXCEPTIONS
 public class StateCensusAnalyserException extends Exception {
         public enum ExceptionType {
-            NO_SUCH_FILE, NO_SUCH_FILE_TYPE
+            NO_SUCH_FILE, NO_SUCH_FILE_TYPE, NO_SUCH_FILE_HEADER
         }
 
         public ExceptionType type;
