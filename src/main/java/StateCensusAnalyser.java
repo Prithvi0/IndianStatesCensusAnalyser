@@ -16,20 +16,12 @@ public class StateCensusAnalyser {
     public int CensusCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
         ) {
-            // USE OF POJO FILE TO ITERATE AND PRINT ENTRIES OF CSV FILE
-            CsvToBean<CSVStateCensus> csvStateCensuses = new CsvToBeanBuilder(reader)
-                    .withType(CSVStateCensus.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            Iterator<CSVStateCensus> csvStateCensusIterator = csvStateCensuses.iterator();
+
+            Iterator<CSVStateCensus> csvStateCensusIterator = getCSVStateCensusDataIterator(reader, CSVStateCensus.class);
+
             while (csvStateCensusIterator.hasNext()) {
                 // READ ALL THE CSV CONTENTS INTO MEMORY
-                CSVStateCensus stateCensus = csvStateCensusIterator.next();
-                System.out.println("State : " + stateCensus.getState());
-                System.out.println("Population : " + stateCensus.getPopulation());
-                System.out.println("AreaInSqKm : " + stateCensus.getAreaInSqKm());
-                System.out.println("DensityPerSqKm : " + stateCensus.getDensityPerSqKm());
-                System.out.println("================================================");
+                CSVStateCensus csvStateCensus = csvStateCensusIterator.next();
                 totalEntries++;
             }
         } catch (IOException e) {
@@ -43,20 +35,10 @@ public class StateCensusAnalyser {
     public int CensusCodeCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
         ) {
-            // USE OF POJO FILE TO ITERATE AND PRINT ENTRIES OF CSV FILE
-            CsvToBean<CSVStates> csvStatesCode = new CsvToBeanBuilder(reader)
-                    .withType(CSVStates.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-            Iterator<CSVStates> csvStatesIterator = csvStatesCode.iterator();
-            while (csvStatesIterator.hasNext()) {
+            Iterator<CSVStates> csvStatesCodeIterator = getCSVStateCensusDataIterator(reader, CSVStates.class);
+            while (csvStatesCodeIterator.hasNext()) {
                 // READ ALL THE CSV CONTENTS INTO MEMORY
-                CSVStates csvStates = csvStatesIterator.next();
-                System.out.println("SrNo : " + csvStates.getSrNo());
-                System.out.println("StateName : " + csvStates.getStateName());
-                System.out.println("TIN : " + csvStates.getTin());
-                System.out.println("StateCode : " + csvStates.getStateCode());
-                System.out.println("================================================");
+                CSVStates csvStates = csvStatesCodeIterator.next();
                 totalStateCodeEntries++;
             }
         } catch (IOException e) {
@@ -65,5 +47,18 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
         }
         return totalStateCodeEntries;
+    }
+
+    private <T> Iterator<T> getCSVStateCensusDataIterator(Reader reader, Class<T> csvDataClass) throws StateCensusAnalyserException {
+        try {
+            CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(csvDataClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<T> csvToBean = csvToBeanBuilder.build();
+            Iterator<T> csvStatesDataIterator = csvToBean.iterator();
+            return csvStatesDataIterator;
+        } catch (IllegalStateException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.UNABLE_TO_PARSE, e.getCause());
+        }
     }
 }
