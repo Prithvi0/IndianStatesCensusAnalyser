@@ -11,6 +11,7 @@ import java.util.Iterator;
 public class StateCensusAnalyser {
 
     int totalEntries;   // INITIALISING A VARIABLE TO STORE ALL CSV ENTRIES COUNT
+    int totalStateCodeEntries;  // INITIALISING A VARIABLE TO STORE ALL CSV STATE CODE ENTRIES COUNT
 
     public int CensusCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
@@ -34,9 +35,35 @@ public class StateCensusAnalyser {
         } catch (IOException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE_HEADER, e.getCause());
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
         }
-        System.out.println(totalEntries);
         return totalEntries;
+    }
+
+    public int CensusCodeCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
+        try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
+        ) {
+            // USE OF POJO FILE TO ITERATE AND PRINT ENTRIES OF CSV FILE
+            CsvToBean<CSVStates> csvStatesCode = new CsvToBeanBuilder(reader)
+                    .withType(CSVStates.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            Iterator<CSVStates> csvStatesIterator = csvStatesCode.iterator();
+            while (csvStatesIterator.hasNext()) {
+                // READ ALL THE CSV CONTENTS INTO MEMORY
+                CSVStates csvStates = csvStatesIterator.next();
+                System.out.println("SrNo : " + csvStates.getSrNo());
+                System.out.println("StateName : " + csvStates.getStateName());
+                System.out.println("TIN : " + csvStates.getTin());
+                System.out.println("StateCode : " + csvStates.getStateCode());
+                System.out.println("================================================");
+                totalStateCodeEntries++;
+            }
+        } catch (IOException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
+        } catch (RuntimeException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
+        }
+        return totalStateCodeEntries;
     }
 }
