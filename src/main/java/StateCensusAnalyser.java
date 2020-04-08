@@ -1,3 +1,4 @@
+import Exception.CSVException;
 import Exception.StateCensusAnalyserException;
 import Factory.CSVBuilderFactory;
 import Factory.ICSVBuilder;
@@ -12,7 +13,7 @@ public class StateCensusAnalyser {
     int totalEntries;   // INITIALISING A VARIABLE TO STORE ALL (CSV STATES CENSUS AND STATE CENSUS CODE) ENTRIES COUNT
 
     //  READING AND PRINTING DATA FROM STATE CENSUS CSV FILE
-    public int CensusCSVData(String getPath) throws StateCensusAnalyserException {
+    public int CensusCSVData(String getPath) throws StateCensusAnalyserException, CSVException {
         try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
@@ -23,6 +24,8 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
+        } catch (CSVException e) {
+            e.printStackTrace();
         }
         return totalEntries;
     }
@@ -39,6 +42,8 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
+        } catch (CSVException e) {
+            e.printStackTrace();
         }
         return totalEntries;
     }

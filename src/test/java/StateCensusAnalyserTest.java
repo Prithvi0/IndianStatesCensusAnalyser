@@ -1,3 +1,4 @@
+import Exception.CSVException;
 import Exception.StateCensusAnalyserException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,14 +29,14 @@ public class StateCensusAnalyserTest {
         try {
             int totalCensusEntries = stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
             Assert.assertEquals(29, totalCensusEntries);
-        } catch (StateCensusAnalyserException e) {
+        } catch (StateCensusAnalyserException | CSVException e) {
             e.printStackTrace();
         }
     }
 
     // T.C 1.2: TEST CASE TO RETURN A CUSTOM EXCEPTION IF CSV FILE IS INCORRECT
     @Test
-    public void givenStateCensusCSVFile_IfIncorrect_ShouldReturnCustomException() throws IOException, RuntimeException {
+    public void givenStateCensusCSVFile_IfIncorrect_ShouldReturnCustomException() throws IOException, RuntimeException, CSVException {
         try {
             stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILE);
         } catch (StateCensusAnalyserException e) {
@@ -46,7 +47,7 @@ public class StateCensusAnalyserTest {
 
     // T.C 1.3: TEST CASE TO RETURN A CUSTOM EXCEPTION IF THE FILE TYPE IS INCORRECT
     @Test
-    public void givenStateCensusFile_IfIncorrectFileType_ShouldReturnCustomException() throws IOException, NullPointerException {
+    public void givenStateCensusFile_IfIncorrectFileType_ShouldReturnCustomException() throws IOException, NullPointerException, CSVException {
         try {
             stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILE_TYPE);
         } catch (StateCensusAnalyserException e) {
@@ -57,7 +58,7 @@ public class StateCensusAnalyserTest {
 
     // T.C 1.4: TEST CASE TO RETURN A CUSTOM EXCEPTION IF THE FILE DELIMITER IS INCORRECT
     @Test
-    public void givenStateCensusFile_WhenIncorrectDelimiter_ShouldReturnCustomException() throws IOException, NullPointerException {
+    public void givenStateCensusFile_WhenIncorrectDelimiter_ShouldReturnCustomException() throws IOException, NullPointerException, CSVException {
         try {
             stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILE_DELIMITER);
         } catch (StateCensusAnalyserException e) {
@@ -68,7 +69,7 @@ public class StateCensusAnalyserTest {
 
     // T.C 1.5: TEST CASE TO RETURN A CUSTOM EXCEPTION IF THE FILE HEADER IS INCORRECT
     @Test
-    public void givenStateCensusFile_WhenIncorrectHeader_ShouldReturnCustomException() throws IOException, NullPointerException {
+    public void givenStateCensusFile_WhenIncorrectHeader_ShouldReturnCustomException() throws IOException, NullPointerException, CSVException {
         try {
             stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_WRONG_FILE_HEADER);
         } catch (StateCensusAnalyserException e) {
