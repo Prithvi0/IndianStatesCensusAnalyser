@@ -1,3 +1,5 @@
+package Factory;
+
 import Exception.StateCensusAnalyserException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -5,12 +7,13 @@ import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.Reader;
 import java.util.Iterator;
 
-public class CSVSingleResponsibilityAnalyser {
-    // GENERIC METHOD TO READ AND ITERATE CSV CONTENTS
-    static  <T> Iterator<T> getCSVStateCensusDataIterator(Reader reader, Class<T> csvDataClass) throws StateCensusAnalyserException {
+public class CSVSingleResponsibiltyAnalyser<T> implements ICSVBuilder {
+    @Override
+    //  GENERIC METHOD TO READ AND ITERATE CSV CONTENTS
+    public Iterator <T> getCSVFileIterator(Reader reader, Class csvStatesClass) throws StateCensusAnalyserException {
         try {
             CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(csvDataClass);
+            csvToBeanBuilder.withType(csvStatesClass);
             csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
             CsvToBean<T> csvToBean = csvToBeanBuilder.build();
             Iterator<T> csvStatesDataIterator = csvToBean.iterator();

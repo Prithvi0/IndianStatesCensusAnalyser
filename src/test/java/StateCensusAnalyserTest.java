@@ -3,8 +3,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.lang.NullPointerException;
-import java.lang.RuntimeException;
 
 public class StateCensusAnalyserTest {
     // FILES ACCESS FOR TC 1.1 - 1.5
@@ -28,9 +26,9 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenStateCensusCSVFile_ShouldEnsureRecordMatches() throws StateCensusAnalyserException {
         try {
-            int totalEntries = stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
-            Assert.assertEquals(29, totalEntries);
-        } catch (NullPointerException | IOException e) {
+            int totalCensusEntries = stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            Assert.assertEquals(29, totalCensusEntries);
+        } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
         }
     }
@@ -83,9 +81,9 @@ public class StateCensusAnalyserTest {
         @Test
         public void givenStateCensusCSVCodeFile_ShouldEnsureRecordMatches() throws StateCensusAnalyserException {
             try {
-                int totalStateCodeEntries = stateCensusAnalyser.CensusCodeCSVData(INDIAN_CENSUS_CSV_CODE_FILE_PATH);
-                Assert.assertEquals(37, totalStateCodeEntries);
-            } catch (NullPointerException | IOException e) {
+                int totalCensusCodeEntries = stateCensusAnalyser.CensusCodeCSVData(INDIAN_CENSUS_CSV_CODE_FILE_PATH);
+                Assert.assertEquals(37, totalCensusCodeEntries);
+            } catch (StateCensusAnalyserException e) {
                 e.printStackTrace();
             }
         }
