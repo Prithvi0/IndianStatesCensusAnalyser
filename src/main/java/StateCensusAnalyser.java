@@ -13,6 +13,7 @@ public class StateCensusAnalyser {
     int totalEntries;   // INITIALISING A VARIABLE TO STORE ALL CSV ENTRIES COUNT
     int totalStateCodeEntries;  // INITIALISING A VARIABLE TO STORE ALL CSV STATE CODE ENTRIES COUNT
 
+    // METHOD TO READ CSV FILE OF STATE CENSUS
     public int CensusCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
         ) {
@@ -32,6 +33,7 @@ public class StateCensusAnalyser {
         return totalEntries;
     }
 
+    //  METHOD TO READ CSV FILE OF STATE CENSUS CODE
     public int CensusCodeCSVData(String csvPath) throws IOException, StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath))
         ) {
@@ -49,6 +51,7 @@ public class StateCensusAnalyser {
         return totalStateCodeEntries;
     }
 
+    // GENERIC METHOD TO READ AND ITERATE CSV CONTENTS
     private <T> Iterator<T> getCSVStateCensusDataIterator(Reader reader, Class<T> csvDataClass) throws StateCensusAnalyserException {
         try {
             CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
