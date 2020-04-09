@@ -1,10 +1,12 @@
 package Factory;
-
-import Exception.*;
+import Exception.CSVException;
 
 import java.io.Reader;
 import java.util.Iterator;
+import java.util.List;
 
 public interface ICSVBuilder<T> {
-   public Iterator<T> getCSVFileIterator(Reader reader, Class<T> csvStatesClass) throws StateCensusAnalyserException, CSVException;
+   public <T> List getCSVStatesCodeList(Reader reader, Class<T> csvStatesClass) throws CSVException;
+
+   public <T> Iterator getCSVFileIterator(Reader reader, Class csvStatesClass) throws CSVException;
 }
