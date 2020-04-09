@@ -1,6 +1,6 @@
 import com.opencsv.bean.CsvBindByName;
 
-public class CSVStates {
+public class CSVStatesCode {
     @CsvBindByName(column = "SrNo", required = true)
     private String srNo;
 

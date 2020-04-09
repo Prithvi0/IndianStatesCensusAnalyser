@@ -11,7 +11,7 @@ import java.util.List;
 public class CSVSingleResponsibiltyAnalyser<T> implements ICSVBuilder {
     @Override
     //  GENERIC METHOD TO READ AND ITERATE CSV CONTENTS
-    public Iterator getCSVFileIterator(Reader reader, Class csvStatesClass){
+    public Iterator<T> getCSVFileIterator(Reader reader, Class csvStatesClass) throws CSVException {
         try {
             CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(csvStatesClass);
@@ -28,9 +28,10 @@ public class CSVSingleResponsibiltyAnalyser<T> implements ICSVBuilder {
         }
         return null;
     }
+
     @Override
     //  GENERIC METHOD TO PARSE LIST OF CSV CONTENTS
-    public List getCSVStatesCodeList(Reader reader, Class csvStatesClass) {
+    public List<T> getCSVFileList(Reader reader, Class csvStatesClass) throws CSVException {
         CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
         csvToBeanBuilder.withType(csvStatesClass);
         csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);

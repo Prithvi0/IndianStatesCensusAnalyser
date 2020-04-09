@@ -2,7 +2,7 @@ package Exception;
 // CLASS FOR CUSTOM STATE CENSUS ANALYSIS EXCEPTIONS
 public class StateCensusAnalyserException extends Exception {
         public enum ExceptionType {
-            NO_SUCH_FILE, INCORRECT_FILE, UNABLE_TO_PARSE
+            NO_SUCH_FILE, INCORRECT_FILE, UNABLE_TO_PARSE, NO_CENSUS_DATA
         }
 
         public ExceptionType type;

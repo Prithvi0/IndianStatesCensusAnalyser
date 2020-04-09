@@ -55,4 +55,8 @@ public class CSVStateCensus {
     public void setDensityPerSqKm(String densityPerSqKm) {
         this.densityPerSqKm = densityPerSqKm;
     }
+
+    public String compareToIgnoreCase(CSVStateCensus census2) {
+        return state;
+    }
 }
