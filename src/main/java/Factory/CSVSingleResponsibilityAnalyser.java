@@ -5,13 +5,16 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-public class CSVSingleResponsibiltyAnalyser<T> implements ICSVBuilder {
+public class CSVSingleResponsibilityAnalyser <T> implements ICSVBuilder {
+
     @Override
     //  GENERIC METHOD TO READ AND ITERATE CSV CONTENTS
-    public Iterator<T> getCSVFileIterator(Reader reader, Class csvStatesClass) throws CSVException {
+    public Iterator<T> getCSVFileIterator(Reader reader, Class csvStatesClass) {
         try {
             CsvToBeanBuilder<T> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(csvStatesClass);
@@ -36,5 +39,17 @@ public class CSVSingleResponsibiltyAnalyser<T> implements ICSVBuilder {
         csvToBeanBuilder.withType(csvStatesClass);
         csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
         return csvToBeanBuilder.build().parse();
+    }
+
+    @Override
+    public HashMap<T, T> getCSVFileMap(Reader reader, Class csvStatesClass) throws CSVException {
+        List list = getCSVFileList(reader, csvStatesClass);
+        Map<Integer, Object> map = new HashMap<>();
+        Integer csvDataCount = 0;
+        for (Object dataObject : list) {
+            map.put(csvDataCount, dataObject);
+            csvDataCount++;
+        }
+        return (HashMap<T, T>) map;
     }
 }

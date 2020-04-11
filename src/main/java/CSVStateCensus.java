@@ -1,6 +1,6 @@
 import com.opencsv.bean.CsvBindByName;
 
-public class CSVStateCensus {
+public class CSVStateCensus extends CSVStatesCode {
     @CsvBindByName(column = "State", required = true)
     private String state;
 
