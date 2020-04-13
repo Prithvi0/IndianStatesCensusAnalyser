@@ -1,17 +1,19 @@
+package dto;
+
 import com.opencsv.bean.CsvBindByName;
 
-public class CSVStateCensus extends CSVStatesCode {
+public class CSVStateCensusIndia {
     @CsvBindByName(column = "State", required = true)
-    private String state;
+    public String state;
 
     @CsvBindByName(column = "Population", required = true)
-    private String population;
+    public String population;
 
     @CsvBindByName(column = "AreaInSqKm", required = true)
-    private String areaInSqKm;
+    public String areaInSqKm;
 
     @CsvBindByName(column = "DensityPerSqKm", required = true)
-    private String densityPerSqKm;
+    public String densityPerSqKm;
 
     // METHOD TO RETURN DETAILS FROM CSV FILE
     @Override
@@ -23,6 +25,7 @@ public class CSVStateCensus extends CSVStatesCode {
                 ", densityPerSqKm='" + densityPerSqKm + '\'' +
                 '}';
     }
+
     // METHODS TO GET AND SET THE DATA FROM THE CSV FILE
     public String getState() {
         return state;
@@ -54,9 +57,5 @@ public class CSVStateCensus extends CSVStatesCode {
 
     public void setDensityPerSqKm(String densityPerSqKm) {
         this.densityPerSqKm = densityPerSqKm;
-    }
-
-    public String compareToIgnoreCase(CSVStateCensus census2) {
-        return state;
     }
 }

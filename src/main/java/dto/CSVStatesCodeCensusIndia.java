@@ -1,6 +1,8 @@
+package dto;
+
 import com.opencsv.bean.CsvBindByName;
 
-public class CSVStatesCode {
+public class CSVStatesCodeCensusIndia {
     @CsvBindByName(column = "SrNo", required = true)
     private String srNo;
 
