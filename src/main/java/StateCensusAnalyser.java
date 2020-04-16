@@ -14,6 +14,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
 
@@ -48,10 +49,10 @@ public class StateCensusAnalyser {
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator csvStatesCodeCensusIndiaIterator = csvBuilder.getCSVFileIterator(reader, CSVStatesCodeCensusIndia.class);
-            while (csvStatesCodeCensusIndiaIterator.hasNext()) {
-                IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO((CSVStateCensusIndia) csvStatesCodeCensusIndiaIterator.next());
-                indiaCensusDAOList = new ArrayList<>(indiaCensusDAOMap.values());
-            }
+            Iterable<CSVStatesCodeCensusIndia> csvStatesCodeCensusIndiaIterable = () -> csvStatesCodeCensusIndiaIterator;
+            StreamSupport.stream(csvStatesCodeCensusIndiaIterable.spliterator(), false)
+                    .map(CSVStatesCodeCensusIndia.class::cast)
+                    .forEach(csvStatesCodeCensusIndia -> indiaCensusDAOMap.put(csvStatesCodeCensusIndia.getStateName(), new IndiaCensusDAO(csvStatesCodeCensusIndia)));
             return this.indiaCensusDAOMap.size();
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
@@ -123,4 +124,4 @@ public class StateCensusAnalyser {
                 }
             });
     }
-}
+    }
