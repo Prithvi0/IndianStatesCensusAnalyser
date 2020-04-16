@@ -87,8 +87,17 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No State Population Data");
         Comparator<IndiaCensusDAO> indiaCensusDaoComparator = Comparator.comparing(census -> census.population);
         this.censusSort(indiaCensusDaoComparator);
-        System.out.println(indiaCensusDAOList);
-        return new Gson().toJson(indiaCensusDAOList);
+        return new Gson().toJson(this.indiaCensusDAOList);
+    }
+
+    //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON STATES DENSITY (PER KILOMETER SQUARE)
+    public String getAreaInSqKmWiseSortedCensusData() throws StateCensusAnalyserException {
+        if (indiaCensusDAOList == null || indiaCensusDAOList.size() == 0) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No State Density/kmSq Data");
+        }
+        Comparator<IndiaCensusDAO> censusComparator = Comparator.comparing(census -> census.densityPerSqKm);
+        this.censusSort(censusComparator);
+        return new Gson().toJson(this.indiaCensusDAOList);
     }
 
     // METHOD TO SORT CSV FILE, ALPHABETICALLY
