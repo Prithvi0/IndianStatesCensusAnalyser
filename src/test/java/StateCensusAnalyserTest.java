@@ -218,6 +218,7 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenIndianCensusStatePopulationData_WhenSortedAndNothingProvided_ShouldReturnCustomException() {
         try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
             String sortedCensusData = stateCensusAnalyser.getStateWiseSortedPopulation();
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertNotEquals("", stateCensuses[0].stateCode);
@@ -230,7 +231,8 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenIndianCensusStateDensityPerKmSqData_WhenSortedAndFirstIndexProvided_ShouldReturnMostDensestState() {
         try {
-            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getDensityInSqKmWiseSortedCensusData();
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertEquals("Bihar", stateCensuses[stateCensuses.length - 1].state);
         } catch (StateCensusAnalyserException e) { }
@@ -239,7 +241,8 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenIndianCensusStateDensityPerKmSqData_WhenSortedAndLastIndexProvided_ShouldReturnLeastDensestState() {
         try {
-            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getDensityInSqKmWiseSortedCensusData();
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertEquals("Arunachal Pradesh", stateCensuses[0].state);
         } catch (StateCensusAnalyserException e) { }
@@ -248,9 +251,43 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenIndianCensusStateDensityPerKmSqData_WhenSortedAndNothingProvided_ShouldReturnCustomException() {
         try {
-            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getDensityInSqKmWiseSortedCensusData();
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertNotEquals("", stateCensuses[0].state);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, e.type);
+        }
+    }
+
+    // T.C 7: TEST CASES TO CHECK FOR THE FIRST AND LAST STATES BASED ON SQ. KM. AREA
+    @Test
+    public void givenIndianCensusStateAreaInKmSqData_WhenSortedAndFirstIndexProvided_ShouldReturnHighestAreaState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            Assert.assertEquals("Rajasthan", stateCensuses[stateCensuses.length - 1].state);
+        } catch (StateCensusAnalyserException e) { }
+    }
+
+    @Test
+    public void givenIndianCensusStateAreaInKmSqData_WhenSortedAndLastIndexProvided_ShouldReturnLowestAreaState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            Assert.assertEquals("Arunachal Pradesh", stateCensuses[0].state);
+        } catch (StateCensusAnalyserException e) { }
+    }
+
+    @Test
+    public void givenIndianCensusStateAreaInKmSqData_WhenSortedAndWrongProvided_ShouldReturnCustomException() {
+        try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getAreaInSqKmWiseSortedCensusData();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            Assert.assertNotEquals("Goa", stateCensuses[0].state);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, e.type);
         }
