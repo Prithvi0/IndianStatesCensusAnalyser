@@ -83,7 +83,7 @@ public class StateCensusAnalyserTest {
         try {
             int totalCensusCodeEntries = stateCensusAnalyser.CensusCodeCSVData(INDIAN_CENSUS_CSV_CODE_FILE_PATH);
             Assert.assertEquals(37, totalCensusCodeEntries);
-        } catch (StateCensusAnalyserException | AssertionError e) {
+        } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
         }
     }
@@ -185,7 +185,7 @@ public class StateCensusAnalyserTest {
             String sortedCensusData = stateCensusAnalyser.getStateWiseSortedStateCode();
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertEquals("WB", stateCensuses[stateCensuses.length - 1].stateCode);
-        } catch (ArrayIndexOutOfBoundsException | StateCensusAnalyserException e) {
+        } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
         }
     }
@@ -198,9 +198,42 @@ public class StateCensusAnalyserTest {
             IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
             Assert.assertNotEquals("MH", stateCensuses[0].stateCode);
         } catch (StateCensusAnalyserException e) {
-            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_CENSUS_STATE_CODE_DATA, e.type);
-        } catch (ArrayIndexOutOfBoundsException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.type);
+        }
+    }
+
+    // T.C 5: TEST CASES TO CHECK FOR THE FIRST AND LAST STATES BASED ON POPULATION
+    @Test
+    public void givenIndianCensusStatePopulationData_WhenSortedAndLastIndexProvided_ShouldReturnMostPopulatedState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedPopulation();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            Assert.assertEquals("Uttar Pradesh", stateCensuses[stateCensuses.length - 1].state);
+        } catch (StateCensusAnalyserException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIndianCensusStatePopulationData_WhenSortedAndFirstIndexProvided_ShouldReturnLeastPopulatedState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(INDIAN_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedPopulation();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+            Assert.assertEquals("Sikkim", stateCensuses[0].state);
+        } catch (StateCensusAnalyserException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenIndianCensusStatePopulationData_WhenSortedAndNothingProvided_ShouldReturnCustomException() {
+        try {
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedPopulation();
+            IndiaCensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, IndiaCensusDAO[].class);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, e.type);
         }
     }
 }

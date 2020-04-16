@@ -5,12 +5,12 @@ import dto.CSVStatesCodeCensusIndia;
 
 public class IndiaCensusDAO {
     public String state;
-    public String population;
-    public String areaInSqKm;
-    public String densityPerSqKm;
-    public String srNo;
+    public Integer population;
+    public Double areaInSqKm;
+    public Double densityPerSqKm;
+    public Integer srNo;
     public String stateName;
-    public String tin;
+    public Integer tin;
     public String stateCode;
 
     public IndiaCensusDAO(CSVStateCensusIndia csvStateCensusIndia) {

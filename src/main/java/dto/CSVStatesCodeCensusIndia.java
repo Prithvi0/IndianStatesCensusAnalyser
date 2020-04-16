@@ -4,57 +4,31 @@ import com.opencsv.bean.CsvBindByName;
 
 public class CSVStatesCodeCensusIndia {
     @CsvBindByName(column = "SrNo", required = true)
-    private String srNo;
+    private Integer srNo;
 
     @CsvBindByName(column = "StateName", required = true)
-    private String  stateName;
+    private String stateName;
 
     @CsvBindByName(column = "TIN", required = true)
-    private String tin;
+    private Integer tin;
 
     @CsvBindByName(column = "StateCode", required = true)
     private String stateCode;
 
-    // METHOD TO RETURN DETAILS FROM CSV FILE
-    @Override
-    public String toString() {
-        return "CSVStateCensusCode{" +
-                "srNo='" + srNo + '\'' +
-                ", stateName='" + stateName + '\'' +
-                ", tin='" + tin + '\'' +
-                ", stateCode='" + stateCode + '\'' +
-                '}';
-    }
-    // METHODS TO GET AND SET THE DATA FROM THE CSV FILE
-    public String getSrNo() {
+    // METHODS TO GET THE DATA FROM THE CSV FILE
+    public Integer getSrNo() {
         return srNo;
-    }
-
-    public void setSrNo(String srNo) {
-        this.srNo = srNo;
     }
 
     public String getStateName() {
         return stateName;
     }
 
-    public void setStateName(String stateName) {
-        this.stateName = stateName;
-    }
-
-    public String getTin() {
+    public Integer getTin() {
         return tin;
-    }
-
-    public void setTin(String tin) {
-        this.tin = tin;
     }
 
     public String getStateCode() {
         return stateCode;
-    }
-
-    public void setStateCode(String stateCode) {
-        this.stateCode = stateCode;
     }
 }

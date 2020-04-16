@@ -1,5 +1,9 @@
 package Exception;
 
+import dao.IndiaCensusDAO;
+
+import java.util.List;
+
 // CLASS FOR CUSTOM STATE CENSUS ANALYSIS EXCEPTIONS
 public class StateCensusAnalyserException extends Exception {
     public enum ExceptionType {

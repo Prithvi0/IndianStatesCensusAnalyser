@@ -16,12 +16,12 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class StateCensusAnalyser {
+
     List<IndiaCensusDAO> indiaCensusDAOList = new ArrayList<>();
     Map<String, IndiaCensusDAO> indiaCensusDAOMap = new HashMap<>();
 
     //  METHOD TO TAKE LIST FROM STATE CENSUS CSV FILE
     public int CensusCSVData(String getPath) throws StateCensusAnalyserException {
-        int totalRecords = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
@@ -31,7 +31,7 @@ public class StateCensusAnalyser {
                 totalEntries++;
                 IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO(csvStateCensusIndiaIterator.next());
             }
-            return totalEntries;
+                return totalEntries;
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
@@ -39,21 +39,20 @@ public class StateCensusAnalyser {
         } catch (CSVException | IOException e) {
             e.printStackTrace();
         }
-        return totalRecords;
+        return this.indiaCensusDAOList.size();
     }
 
     //  METHOD TO TAKE LIST FROM STATE CODE CSV FILE
     public int CensusCodeCSVData(String getPath) throws StateCensusAnalyserException, CSVException {
-        int totalRecords = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<CSVStatesCodeCensusIndia> csvStatesCodeCensusIndiaIterator = csvBuilder.getCSVFileIterator(reader, CSVStatesCodeCensusIndia.class);
+            Iterator csvStatesCodeCensusIndiaIterator = csvBuilder.getCSVFileIterator(reader, CSVStatesCodeCensusIndia.class);
             while (csvStatesCodeCensusIndiaIterator.hasNext()) {
-                IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO(csvStatesCodeCensusIndiaIterator.next());
+                IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO((CSVStateCensusIndia) csvStatesCodeCensusIndiaIterator.next());
                 indiaCensusDAOList = new ArrayList<>(indiaCensusDAOMap.values());
             }
-            totalRecords = indiaCensusDAOMap.size();
+            return this.indiaCensusDAOMap.size();
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
@@ -61,7 +60,7 @@ public class StateCensusAnalyser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return totalRecords;
+        return this.indiaCensusDAOMap.size();
     }
 
     //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON STATES
@@ -69,31 +68,40 @@ public class StateCensusAnalyser {
         if (indiaCensusDAOList == null || indiaCensusDAOList.size() == 0)
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No Census Data");
         Comparator<IndiaCensusDAO> censusCSVComparator = Comparator.comparing(census -> census.state);
-        this.censusSort(censusCSVComparator, (Map<Object, Object>) indiaCensusDAOList);
-        String sortedStateCensusJson = new Gson().toJson(indiaCensusDAOList);
-        return sortedStateCensusJson;
+        this.censusSort(censusCSVComparator);
+        return new Gson().toJson(indiaCensusDAOList);
     }
 
     //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON STATES CODE
     public String getStateWiseSortedStateCode() throws StateCensusAnalyserException {
         if (indiaCensusDAOList == null || indiaCensusDAOList.size() == 0)
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_STATE_CODE_DATA, "No State Data");
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_STATE_CODE_DATA, "No Census State Code Data");
         Comparator<IndiaCensusDAO> censusCSVCodeComparator = Comparator.comparing(census -> census.stateCode);
-        this.censusSort(censusCSVCodeComparator, (Map<Object, Object>) indiaCensusDAOList);
+        this.censusSort(censusCSVCodeComparator);
         return new Gson().toJson(indiaCensusDAOList);
     }
 
-    // METHOD TO SORT CSV FILE USING MAP, ALPHABETICALLY
-    private <T> void censusSort(Comparator censusCSVComparator, Map<Object, Object> csvMap) {
-        IntStream.range(0, csvMap.size() - 1)
-                .flatMap(csvLengthIteration -> IntStream.range(0, csvMap.size() - 1))
-                .forEachOrdered(csvDataIteration -> {
-                    T censusCSV1 = (T) csvMap.get(csvDataIteration);
-                    T censusCSV2 = (T) csvMap.get(csvDataIteration + 1);
-                    if (censusCSVComparator.compare(censusCSV1, censusCSV2) > 0) {
-                        csvMap.put(csvDataIteration, censusCSV2);
-                        csvMap.put(csvDataIteration + 1, censusCSV1);
-                    }
-                });
+    //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON STATES POPULATION
+    public String getStateWiseSortedPopulation() throws StateCensusAnalyserException{
+        if(indiaCensusDAOList == null || indiaCensusDAOList.size() == 0)
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No State Population Data");
+        Comparator<IndiaCensusDAO> indiaCensusDaoComparator = Comparator.comparing(census -> census.population);
+        this.censusSort(indiaCensusDaoComparator);
+        System.out.println(indiaCensusDAOList);
+        return new Gson().toJson(indiaCensusDAOList);
+    }
+
+    // METHOD TO SORT CSV FILE, ALPHABETICALLY
+    private <T extends IndiaCensusDAO> void censusSort(Comparator<T> censusCSVComparator) {
+        IntStream.range(0, indiaCensusDAOList.size() - 1)
+            .flatMap(csvLengthIteration -> IntStream.range(0, indiaCensusDAOList.size() - 1))
+            .forEachOrdered(csvDataIteration -> {
+                T censusCSV1 = (T) indiaCensusDAOList.get(csvDataIteration);
+                T censusCSV2 = (T) indiaCensusDAOList.get(csvDataIteration + 1);
+                if (censusCSVComparator.compare(censusCSV1, censusCSV2) > 0) {
+                    indiaCensusDAOList.set(csvDataIteration, censusCSV2);
+                    indiaCensusDAOList.set(csvDataIteration + 1, censusCSV1);
+                }
+            });
     }
 }
