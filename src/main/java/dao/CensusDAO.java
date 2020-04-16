@@ -1,9 +1,10 @@
 package dao;
 
+import dto.CSVCensusUS;
 import dto.CSVStateCensusIndia;
 import dto.CSVStatesCodeCensusIndia;
 
-public class IndiaCensusDAO {
+public class CensusDAO {
     public String state;
     public Integer population;
     public Double areaInSqKm;
@@ -13,17 +14,25 @@ public class IndiaCensusDAO {
     public Integer tin;
     public String stateCode;
 
-    public IndiaCensusDAO(CSVStateCensusIndia csvStateCensusIndia) {
+    public CensusDAO(CSVStateCensusIndia csvStateCensusIndia) {
         state = csvStateCensusIndia.getState();
         population = csvStateCensusIndia.getPopulation();
         areaInSqKm = csvStateCensusIndia.getAreaInSqKm();
         densityPerSqKm = csvStateCensusIndia.getDensityPerSqKm();
     }
 
-    public IndiaCensusDAO(CSVStatesCodeCensusIndia csvStatesCodeCensusIndia) {
+    public CensusDAO(CSVStatesCodeCensusIndia csvStatesCodeCensusIndia) {
         srNo = csvStatesCodeCensusIndia.getSrNo();
         stateName = csvStatesCodeCensusIndia.getStateName();
         tin = csvStatesCodeCensusIndia.getTin();
         stateCode = csvStatesCodeCensusIndia.getStateCode();
+    }
+
+    public CensusDAO(CSVCensusUS csvCensusUS) {
+        stateCode = csvCensusUS.getStateId();
+        state = csvCensusUS.getState();
+        population = csvCensusUS.getPopulation();
+        areaInSqKm = csvCensusUS.getArea();
+        densityPerSqKm = csvCensusUS.getPopulationDensity();
     }
 }
