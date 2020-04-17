@@ -39,6 +39,14 @@ public class CensusDAO {
         densityPerSqKm = csvCensusUS.populationDensity;
     }
 
+    public double getPopulation() {
+        return this.population;
+    }
+
+    public double getPopulationDensity() {
+        return this.densityPerSqKm;
+    }
+
     //  CENSUS SORTING IN ASCENDING ORDER
     public static Comparator<? super CensusDAO> getCensusSortComparator(StateCensusAnalyser.SortingMode mode) {
         if (mode.equals(StateCensusAnalyser.SortingMode.STATE))

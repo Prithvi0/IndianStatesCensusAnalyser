@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import dao.CensusDAO;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,6 +47,17 @@ public class StateCensusAnalyser {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No Census Data");
         ArrayList censusDTO = censusDAOMap.values().stream()
                 .sorted(CensusDAO.getCensusSortComparator(mode))
+                .map(censusDAO -> censusDAO.getCensusDTO(country))
+                .collect(Collectors.toCollection(ArrayList::new));
+        return new Gson().toJson(censusDTO);
+    }
+
+    // METHOD TO SORT BOTH POPULATION AND DENSITY CENSUS DATA
+    public String getSortedPopulationAndDensity() throws StateCensusAnalyserException {
+        if (censusDAOMap == null || censusDAOMap.size() == 0)
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No Census Data");
+        ArrayList censusDTO = censusDAOMap.values().stream()
+                .sorted(Comparator.comparingDouble(CensusDAO::getPopulation).thenComparingDouble(CensusDAO::getPopulationDensity))
                 .map(censusDAO -> censusDAO.getCensusDTO(country))
                 .collect(Collectors.toCollection(ArrayList::new));
         return new Gson().toJson(censusDTO);
