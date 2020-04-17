@@ -14,24 +14,4 @@ public class CSVStatesCodeCensusIndia {
 
     @CsvBindByName(column = "StateCode", required = true)
     public String stateCode;
-
-    public CSVStatesCodeCensusIndia() {
-    }
-
-    // METHODS TO GET THE DATA FROM THE CSV FILE
-    public Integer getSrNo() {
-        return srNo;
-    }
-
-    public String getStateName() {
-        return stateName;
-    }
-
-    public Integer getTin() {
-        return tin;
-    }
-
-    public String getStateCode() {
-        return stateCode;
-    }
 }
