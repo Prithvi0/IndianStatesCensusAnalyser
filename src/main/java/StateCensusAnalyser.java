@@ -24,16 +24,24 @@ public class StateCensusAnalyser {
 
     //  METHOD TO TAKE LIST FROM INDIAN STATE CENSUS CSV FILE
     public int CensusCSVData(String getPath) throws StateCensusAnalyserException {
+        return CensusData(getPath, CensusDAO.class);
+    }
+    private <T> int CensusData(String getPath, Class<T> censusClass) throws StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<CSVStateCensusIndia> csvStateCensusIndiaIterator = csvBuilder.getCSVFileIterator(reader, CSVStateCensusIndia.class);
-            int totalEntries = 0;
-            while (csvStateCensusIndiaIterator.hasNext()) {
-                totalEntries++;
-                CensusDAO censusDAO = new CensusDAO(csvStateCensusIndiaIterator.next());
+            Iterator<T> csvStateCensusIterator = csvBuilder.getCSVFileIterator(reader, censusClass);
+            Iterable<T> csvStateCensusIterable = () -> csvStateCensusIterator;
+            if(censusClass.getName().equals("dto.CSVStateCensusIndia")) {
+                StreamSupport.stream(csvStateCensusIterable.spliterator(), false)
+                        .map(CSVStateCensusIndia.class::cast)
+                        .forEach(censusCSV -> censusDAOMap.put(censusCSV.state, new CensusDAO(censusCSV)));
             }
-                return totalEntries;
+            if (censusClass.getName().equals("dto.CSVCensusUS")) {
+                StreamSupport.stream(csvStateCensusIterable.spliterator(), false)
+                        .map(CSVCensusUS.class::cast)
+                        .forEach(csvCensusUS -> censusDAOMap.put((csvCensusUS).getState(), new CensusDAO(csvCensusUS)));
+            }
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
@@ -42,45 +50,6 @@ public class StateCensusAnalyser {
             e.printStackTrace();
         }
         return this.censusDAOList.size();
-    }
-
-    //  METHOD TO TAKE LIST FROM INDIAN STATE CODE CSV FILE
-    public int CensusCodeCSVData(String getPath) throws StateCensusAnalyserException, CSVException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
-        ) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator csvStatesCodeCensusIndiaIterator = csvBuilder.getCSVFileIterator(reader, CSVStatesCodeCensusIndia.class);
-            Iterable<CSVStatesCodeCensusIndia> csvStatesCodeCensusIndiaIterable = () -> csvStatesCodeCensusIndiaIterator;
-            StreamSupport.stream(csvStatesCodeCensusIndiaIterable.spliterator(), false)
-                    .map(CSVStatesCodeCensusIndia.class::cast)
-                    .forEach(csvStatesCodeCensusIndia -> censusDAOMap.put(csvStatesCodeCensusIndia.getStateName(), new CensusDAO(csvStatesCodeCensusIndia)));
-            return this.censusDAOMap.size();
-        } catch (NoSuchFileException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
-        } catch (RuntimeException e) {
-            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return this.censusDAOMap.size();
-    }
-
-    //  METHOD TO TAKE LIST FROM US CENSUS CSV FILE
-    public int USCensusData(String getPath) throws StateCensusAnalyserException,CSVException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
-        ) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            Iterator<CSVCensusUS> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVCensusUS.class);
-            Iterable<CSVCensusUS> csvStateCodeIterable = () -> csvFileIterator;
-            StreamSupport.stream(csvStateCodeIterable.spliterator(),false)
-                    .map(CSVCensusUS.class::cast)
-                    .forEach(usCSVData -> censusDAOMap.put((usCSVData).getState(),new CensusDAO(usCSVData)));
-            return this.censusDAOMap.size();
-        } catch (IOException e) {
-            throw new CSVException(CSVException.ExceptionType.NO_SUCH_FILE, e.getCause());
-        } catch (RuntimeException e) {
-            throw new CSVException(CSVException.ExceptionType.INCORRECT_FILE, e.getCause());
-        }
     }
 
     //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON INDIAN STATES
