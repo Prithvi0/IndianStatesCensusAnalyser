@@ -15,24 +15,36 @@ public class CensusDAO {
     public String stateCode;
 
     public CensusDAO(CSVStateCensusIndia csvStateCensusIndia) {
-        state = csvStateCensusIndia.getState();
-        population = csvStateCensusIndia.getPopulation();
-        areaInSqKm = csvStateCensusIndia.getAreaInSqKm();
-        densityPerSqKm = csvStateCensusIndia.getDensityPerSqKm();
+        state = csvStateCensusIndia.state;
+        population = csvStateCensusIndia.population;
+        areaInSqKm = csvStateCensusIndia.areaInSqKm;
+        densityPerSqKm = csvStateCensusIndia.densityPerSqKm;
     }
 
     public CensusDAO(CSVStatesCodeCensusIndia csvStatesCodeCensusIndia) {
-        srNo = csvStatesCodeCensusIndia.getSrNo();
-        stateName = csvStatesCodeCensusIndia.getStateName();
-        tin = csvStatesCodeCensusIndia.getTin();
-        stateCode = csvStatesCodeCensusIndia.getStateCode();
+        srNo = csvStatesCodeCensusIndia.srNo;
+        stateName = csvStatesCodeCensusIndia.stateName;
+        tin = csvStatesCodeCensusIndia.tin;
+        stateCode = csvStatesCodeCensusIndia.stateCode;
     }
 
     public CensusDAO(CSVCensusUS csvCensusUS) {
-        stateCode = csvCensusUS.getStateId();
-        state = csvCensusUS.getState();
-        population = csvCensusUS.getPopulation();
-        areaInSqKm = csvCensusUS.getArea();
-        densityPerSqKm = csvCensusUS.getPopulationDensity();
+        stateCode = csvCensusUS.stateId;
+        state = csvCensusUS.state;
+        population = csvCensusUS.population;
+        areaInSqKm = csvCensusUS.area;
+        densityPerSqKm = csvCensusUS.populationDensity;
+    }
+
+    private double getTotalArea() {
+        return areaInSqKm;
+    }
+
+    private double getPopulationDensity() {
+        return this.densityPerSqKm;
+    }
+
+    private double getPopulation() {
+        return this.population;
     }
 }

@@ -2,9 +2,9 @@ import com.google.gson.Gson;
 import dao.CensusDAO;
 import Exception.CSVException;
 import Exception.StateCensusAnalyserException;
-import dto.CSVCensusUS;
 import org.junit.Assert;
 import org.junit.Test;
+import service.StateCensusAnalyser;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;

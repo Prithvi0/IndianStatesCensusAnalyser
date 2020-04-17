@@ -1,12 +1,13 @@
-import com.google.gson.Gson;
-import dao.CensusDAO;
-import dto.CSVCensusUS;
-import dto.CSVStateCensusIndia;
-import dto.CSVStatesCodeCensusIndia;
+package service;
+
 import Exception.CSVException;
 import Exception.StateCensusAnalyserException;
 import Factory.CSVBuilderFactory;
 import Factory.ICSVBuilder;
+import com.google.gson.Gson;
+import dao.CensusDAO;
+import dto.CSVCensusUS;
+import dto.CSVStateCensusIndia;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -26,7 +27,8 @@ public class StateCensusAnalyser {
     public int CensusCSVData(String getPath) throws StateCensusAnalyserException {
         return CensusData(getPath, CensusDAO.class);
     }
-    private <T> int CensusData(String getPath, Class<T> censusClass) throws StateCensusAnalyserException {
+
+    public <T> int CensusData(String getPath, Class<T> censusClass) throws StateCensusAnalyserException {
         try (Reader reader = Files.newBufferedReader(Paths.get(getPath))
         ) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
@@ -40,15 +42,13 @@ public class StateCensusAnalyser {
             if (censusClass.getName().equals("dto.CSVCensusUS")) {
                 StreamSupport.stream(csvStateCensusIterable.spliterator(), false)
                         .map(CSVCensusUS.class::cast)
-                        .forEach(csvCensusUS -> censusDAOMap.put((csvCensusUS).getState(), new CensusDAO(csvCensusUS)));
+                        .forEach(csvCensusUS -> censusDAOMap.put((csvCensusUS).state, new CensusDAO(csvCensusUS)));
             }
         } catch (NoSuchFileException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_SUCH_FILE, e.getCause());
         } catch (RuntimeException e) {
             throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.getCause());
-        } catch (CSVException | IOException e) {
-            e.printStackTrace();
-        }
+        } catch (CSVException | IOException e) { }
         return this.censusDAOList.size();
     }
 

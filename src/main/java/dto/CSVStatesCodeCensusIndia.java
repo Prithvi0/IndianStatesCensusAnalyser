@@ -4,16 +4,19 @@ import com.opencsv.bean.CsvBindByName;
 
 public class CSVStatesCodeCensusIndia {
     @CsvBindByName(column = "SrNo", required = true)
-    private Integer srNo;
+    public Integer srNo;
 
     @CsvBindByName(column = "StateName", required = true)
-    private String stateName;
+    public String stateName;
 
     @CsvBindByName(column = "TIN", required = true)
-    private Integer tin;
+    public Integer tin;
 
     @CsvBindByName(column = "StateCode", required = true)
-    private String stateCode;
+    public String stateCode;
+
+    public CSVStatesCodeCensusIndia() {
+    }
 
     // METHODS TO GET THE DATA FROM THE CSV FILE
     public Integer getSrNo() {
