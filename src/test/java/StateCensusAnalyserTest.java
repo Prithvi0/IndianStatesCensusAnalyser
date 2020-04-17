@@ -299,9 +299,7 @@ public class StateCensusAnalyserTest {
         try {
             int totalCensusEntries = stateCensusAnalyser.CensusCSVData(US_CENSUS_CSV_FILE_PATH);
             Assert.assertEquals(51, totalCensusEntries);
-        } catch (StateCensusAnalyserException e) {
-            e.printStackTrace();
-        }
+        } catch (StateCensusAnalyserException e) { }
     }
 
     @Test
@@ -309,8 +307,40 @@ public class StateCensusAnalyserTest {
         try {
             int totalCensusEntries = stateCensusAnalyser.CensusCSVData(US_CENSUS_CSV_FILE_PATH);
             Assert.assertNotEquals(50, totalCensusEntries);
+        } catch (StateCensusAnalyserException e) { }
+    }
+
+    //  T.C 9: TEST CASES FOR US CENSUS DATA BASED ON POPULATION
+    @Test
+    public void givenUSCensusStateData_WhenSortedOnPopulation_ShouldReturnMostPopulatedState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getUSStateWiseSortedPopulation();
+            CensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals("California", stateCensuses[stateCensuses.length - 1].state);
         } catch (StateCensusAnalyserException e) {
-            e.printStackTrace();
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.INCORRECT_FILE, e.type);
+        }
+    }
+
+    @Test
+    public void givenUSCensusStateData_WhenSortedOnPopulation_ShouldReturnLeastPopulatedState() {
+        try {
+            stateCensusAnalyser.CensusCSVData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = stateCensusAnalyser.getUSStateWiseSortedPopulation();
+            CensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals("Wyoming", stateCensuses[0].state);
+        } catch (StateCensusAnalyserException e) { }
+    }
+
+    @Test
+    public void givenUSCensusStateData_WhenSortedOnPopulationAndWrongValueProvided_ShouldReturnMostPopulatedState() {
+        try {
+            String sortedCensusData = stateCensusAnalyser.getUSStateWiseSortedPopulation();
+            CensusDAO[] stateCensuses = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertNotEquals("Ohio", stateCensuses[0].state);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, e.type);
         }
     }
 }

@@ -99,6 +99,15 @@ public class StateCensusAnalyser {
         return new Gson().toJson(this.censusDAOList);
     }
 
+    //  METHOD TO CONVERT DATA IN JSON FORMAT BASED ON US STATES CODE
+    public String getUSStateWiseSortedPopulation() throws StateCensusAnalyserException{
+        if(censusDAOList == null || censusDAOList.size() == 0)
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.ExceptionType.NO_CENSUS_DATA, "No State Population Data");
+        Comparator<CensusDAO> usCensusDaoComparator = Comparator.comparing(census -> census.population);
+        this.censusSort(usCensusDaoComparator);
+        return new Gson().toJson(this.censusDAOList);
+    }
+
     // METHOD TO SORT CSV FILE, ALPHABETICALLY
     private <T extends CensusDAO> void censusSort(Comparator<T> censusCSVComparator) {
         IntStream.range(0, censusDAOList.size() - 1)
